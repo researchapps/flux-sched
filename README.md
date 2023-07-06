@@ -87,6 +87,11 @@ sudo apt install libhwloc-dev libboost-dev libboost-system-dev libboost-filesyst
 ```
 
 Clone flux-sched, the repo name for Fluxion, from an upstream repo and prepare for configure:
+
+##### Building flux-sched
+
+After installing dependency packages, to build `flux-sched` you can do the following:
+
 ```
 git clone <flux-sched repo of your choice>
 cd flux-sched
@@ -109,6 +114,14 @@ For example, if flux-core was installed in `$FLUX_CORE_PREFIX`:
 make
 make check
 make install
+```
+
+To build go bindings, you will need go (tested with 1.19.10) available, and then:
+
+```bash
+export WITH_GO=yes
+./configure
+make
 ```
 
 ##### Flux Instance
