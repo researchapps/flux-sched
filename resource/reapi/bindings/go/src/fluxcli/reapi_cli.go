@@ -50,7 +50,7 @@ func ReapiCliInit(ctx *ReapiCtx, jgf string, options string) (err int) {
 // match policy.
 //
 //	\param ctx       reapi_cli_ctx_t context object
-//	\param orelse_reserve
+//	\param or else_reserve
 //	                Boolean: if false, only allocate; otherwise, first try
 //	                 to allocate and if that fails, reserve.
 //	\param jobspec   jobspec string.
