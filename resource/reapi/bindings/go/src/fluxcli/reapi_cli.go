@@ -141,7 +141,7 @@ func ReapiCliUpdateAllocate(ctx *ReapiCtx, jobid int, r string) (at int64, overh
 	var tmp_rout = C.CString("")
 	defer C.free(unsafe.Pointer(tmp_rout))
 
-	var resource := C.CString(r)
+	var resource = C.CString(r)
 	defer C.free(unsafe.Pointer(resource))
 
 	fluxerr := (int)(C.reapi_cli_update_allocate((*C.struct_reapi_cli_ctx)(ctx),

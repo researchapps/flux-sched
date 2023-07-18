@@ -17,7 +17,7 @@ RUN sudo apt-get -qq install -y --no-install-recommends \
 # Install Golang 1.19.10 for binding tests
 RUN wget https://go.dev/dl/go1.19.10.linux-amd64.tar.gz
 RUN sudo rm -rf /usr/local/go \
-    && sudo tar -C /usr/local -xzf tar -xvf go1.19.10.linux-amd64.tar.gz \
+    && sudo tar -C /usr/local -xzf go1.19.10.linux-amd64.tar.gz \
     && rm -f go1.19.10.linux-amd64.tar.gz
 
 # Add configured user to image with sudo access:
