@@ -119,7 +119,7 @@ export WITH_GO=yes
 make
 ```
 
-To run just one test, you can sd into t
+To run just one test, you can cd into t
 
 ```bash
 $ ./t9001-golang-basic.t 
@@ -127,6 +127,12 @@ ok 1 - match allocate 1 slot: 1 socket: 1 core (pol=default)
 ok 2 - match allocate 2 slots: 2 sockets: 5 cores 1 gpu 6 memory
 # passed all 2 test(s)
 1..2
+```
+
+To run full tests (more robust and mimics what happens in CI) you can do:
+
+```bash
+make check
 ```
 
 ##### Flux Instance

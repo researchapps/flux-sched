@@ -16,7 +16,6 @@ package fluxcli
 import "C"
 import (
 	"fmt"
-	"unsafe"
 )
 
 type (
@@ -25,7 +24,7 @@ type (
 	// ReapiClient is a flux resource API client
 	// it holds a context that is required for most interactinos
 	ReapiClient struct {
-		ctx ReapiCtx
+		ctx *ReapiCtx
 	}
 )
 
@@ -52,7 +51,7 @@ func (cli *ReapiClient) HasContext() bool {
 
 // Destroy destroys a resource API context
 // void reapi_cli_destroy (reapi_cli_ctx_t *ctx);
-func (cli *ReapiClient) Destroy(ctx *ReapiCtx) {
+func (cli *ReapiClient) Destroy() {
 	C.reapi_cli_destroy((*C.struct_reapi_cli_ctx)(cli.ctx))
 }
 

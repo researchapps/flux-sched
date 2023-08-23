@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("Error reading JGF file")
 		return
 	}
-	cli := fluxcli.NewReapiCli()
+	cli := fluxcli.NewReapiClient()
 	err = cli.InitContext(string(jgf), "{}")
 	if err != nil {
 		fmt.Printf("Error initializing jobspec context for ReapiClient: %v\n", err)
@@ -50,7 +50,7 @@ func main() {
 	}
 	printOutput(reserved, allocated, at, jobid, err)
 	reserved, allocated, at, overhead, jobid, err = cli.MatchAllocate(*reserve, string(jobspec))
-	fmt.Println("Errors so far: \n", fluxcli.ReapiCliGetErrMsg())
+	fmt.Println("Errors so far: \n", cli.GetErrMsg())
 
 	if err != nil {
 		fmt.Printf("Error in ReapiClient MatchAllocate: %v\n", err)
