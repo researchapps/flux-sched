@@ -118,7 +118,7 @@ func (m *ReapiModule) Info(ctx *ReapiCtx, jobid int64) (reserved bool, at int64,
 // int reapi_module_cancel (reapi_module_ctx_t *ctx,
 //
 //	const uint64_t jobid, bool noent_ok);*/
-func (m *ReapiModule) Cancel(ctx *ReapiCtx, jobid int64, noent_ok bool) (err error) {
+func (m *ReapiModule) Cancel(jobid int64, noent_ok bool) (err error) {
 	fluxerr := (int)(C.reapi_module_cancel((*C.struct_reapi_module_ctx)(m.ctx),
 		(C.ulong)(jobid),
 		(C.bool)(noent_ok)))
