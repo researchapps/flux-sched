@@ -14,66 +14,66 @@ import (
 	"flag"
 	"fluxcli"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 func main() {
-	ctx := fluxcli.NewReapiCli()
 	jgfPtr := flag.String("jgf", "", "path to jgf")
 	jobspecPtr := flag.String("jobspec", "", "path to jobspec")
 	reserve := flag.Bool("reserve", false, "or else reserve?")
 	flag.Parse()
 
-	jgf, err := ioutil.ReadFile(*jgfPtr)
+	jgf, err := os.ReadFile(*jgfPtr)
 	if err != nil {
 		fmt.Println("Error reading JGF file")
 		return
 	}
-	err = fluxcli.ReapiCliInit(ctx, string(jgf), "{}")
+	cli := fluxcli.NewReapiCli()
+	err = cli.InitContext(string(jgf), "{}")
 	if err != nil {
-		fmt.Printf("Error init ReapiCli: %v\n", err)
+		fmt.Printf("Error initializing jobspec context for ReapiClient: %v\n", err)
 		return
 	}
-	fmt.Printf("Errors so far: %s\n", fluxcli.ReapiCliGetErrMsg(ctx))
+	fmt.Printf("Errors so far: %s\n", cli.GetErrMsg())
 
-	jobspec, err := ioutil.ReadFile(*jobspecPtr)
+	jobspec, err := os.ReadFile(*jobspecPtr)
 	if err != nil {
 		fmt.Printf("Error reading jobspec file: %v\n", err)
 		return
 	}
 	fmt.Printf("Jobspec:\n %s\n", jobspec)
 
-	reserved, allocated, at, overhead, jobid, err := fluxcli.ReapiCliMatchAllocate(ctx, *reserve, string(jobspec))
+	reserved, allocated, at, overhead, jobid, err := cli.MatchAllocate(*reserve, string(jobspec))
 	if err != nil {
-		fmt.Printf("Error in ReapiCliMatchAllocate: %v\n", err)
+		fmt.Printf("Error in ReapiClient MatchAllocate: %v\n", err)
 		return
 	}
 	printOutput(reserved, allocated, at, jobid, err)
-	reserved, allocated, at, overhead, jobid, err = fluxcli.ReapiCliMatchAllocate(ctx, *reserve, string(jobspec))
-	fmt.Println("Errors so far: \n", fluxcli.ReapiCliGetErrMsg(ctx))
+	reserved, allocated, at, overhead, jobid, err = cli.MatchAllocate(*reserve, string(jobspec))
+	fmt.Println("Errors so far: \n", fluxcli.ReapiCliGetErrMsg())
 
 	if err != nil {
-		fmt.Printf("Error in ReapiCliMatchAllocate: %v\n", err)
+		fmt.Printf("Error in ReapiClient MatchAllocate: %v\n", err)
 		return
 	}
 	printOutput(reserved, allocated, at, jobid, err)
-	err = fluxcli.ReapiCliCancel(ctx, 1, false)
+	err = cli.Cancel(1, false)
 	if err != nil {
-		fmt.Printf("Error in ReapiCliCancel: %v\n", err)
+		fmt.Printf("Error in ReapiClient Cancel: %v\n", err)
 		return
 	}
 	fmt.Printf("Cancel output: %v\n", err)
 
-	reserved, at, overhead, mode, err := fluxcli.ReapiCliInfo(ctx, 1)
+	reserved, at, overhead, mode, err := cli.Info(1)
 	if err != nil {
-		fmt.Printf("Error in ReapiCliInfo: %v\n", err)
+		fmt.Printf("Error in ReapiClient Info: %v\n", err)
 		return
 	}
 	fmt.Printf("Info output jobid 1: %t, %d, %f, %s, %v\n", reserved, at, overhead, mode, err)
 
-	reserved, at, overhead, mode, err = fluxcli.ReapiCliInfo(ctx, 2)
+	reserved, at, overhead, mode, err = cli.Info(2)
 	if err != nil {
-		fmt.Println("Error in ReapiCliInfo: %v\n", err)
+		fmt.Println("Error in ReapiClient Info: %v\n", err)
 		return
 	}
 	fmt.Printf("Info output jobid 2: %t, %d, %f, %v\n", reserved, at, overhead, err)

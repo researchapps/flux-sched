@@ -18,13 +18,22 @@ import (
 )
 
 type (
-	ReapiCtx C.struct_reapi_module_ctx_t
+	ReapiCtx    C.struct_reapi_module_ctx_t
+	ReapiModule struct {
+		ctx ReapiCtx
+	}
 )
 
 // NewReapiModule creates a new resource API module
 // reapi_module_ctx_t *reapi_module_new ();
-func NewReapiModule() *ReapiCtx {
-	return (*ReapiCtx)(C.reapi_module_new())
+func NewReapiModule() *ReapiModule {
+	ctx := (*ReapiCtx)(C.reapi_module_new())
+	return &ReapiModule{ctx: ctx}
+}
+
+// HasContext exposes the private ctx, telling the caller if it is set
+func (m *ReapiModule) HasContext() bool {
+	return m.ctx != nil
 }
 
 // Given an integer return code, convert to go error
@@ -36,30 +45,27 @@ func retvalToError(code int, message string) error {
 	return fmt.Errorf(message+" %d", code)
 }
 
-// ReapiModuleDestroy destroys the resource API context
+// Destroy destroys the resource API context
 // void reapi_module_destroy (reapi_module_ctx_t *ctx);
-func ReapiModuleDestroy(ctx *ReapiCtx) {
-	C.reapi_module_destroy((*C.struct_reapi_module_ctx)(ctx))
+func (m *ReapiModule) Destroy() {
+	C.reapi_module_destroy((*C.struct_reapi_module_ctx)(m.ctx))
 }
 
-// ReapiModuleMatchAllocate matches and allocates resources
+// MatchAllocate matches and allocates resources
 // int reapi_module_match_allocate (reapi_module_ctx_t *ctx, bool orelse_reserve,
 // at: is the scheduled time "at"
-func ReapiModuleMatchAllocate(
-	ctx *ReapiCtx,
+func (m *ReapiModule) MatchAllocate(
 	orelse_reserve bool,
 	jobspec string,
 	jobid int,
 ) (reserved bool, allocated string, at int64, overhead float64, err error) {
 	// var atlong C.long = (C.long)(at)
 	var r = C.CString("teststring")
-	defer C.free(unsafe.Pointer(r))
 
 	// Jobspec as a CString
 	spec := C.CString(jobspec)
-	defer C.free(unsafe.Pointer(spec))
 
-	fluxerr := (int)(C.reapi_module_match_allocate((*C.struct_reapi_module_ctx)(ctx),
+	fluxerr := (int)(C.reapi_module_match_allocate((*C.struct_reapi_module_ctx)(m.ctx),
 		(C.bool)(orelse_reserve),
 		spec,
 		(C.ulong)(jobid),
@@ -74,7 +80,7 @@ func ReapiModuleMatchAllocate(
 	return reserved, allocated, at, overhead, err
 }
 
-// ReapiModuleInfo gets the information on the allocation or reservation corresponding
+// Info gets the information on the allocation or reservation corresponding
 // to jobid.
 //
 //	\param ctx       reapi_module_ctx_t context object
@@ -91,8 +97,8 @@ func ReapiModuleMatchAllocate(
 // int reapi_module_info (reapi_module_ctx_t *ctx, const uint64_t jobid,
 //
 //	bool *reserved, int64_t *at, double *ov);
-func ReapiModuleInfo(ctx *ReapiCtx, jobid int64) (reserved bool, at int64, overhead float64, err error) {
-	fluxerr := (int)(C.reapi_module_info((*C.struct_reapi_module_ctx)(ctx),
+func (m *ReapiModule) Info(ctx *ReapiCtx, jobid int64) (reserved bool, at int64, overhead float64, err error) {
+	fluxerr := (int)(C.reapi_module_info((*C.struct_reapi_module_ctx)(m.ctx),
 		(C.ulong)(jobid),
 		(*C.bool)(&reserved),
 		(*C.long)(&at),
@@ -102,7 +108,7 @@ func ReapiModuleInfo(ctx *ReapiCtx, jobid int64) (reserved bool, at int64, overh
 	return reserved, at, overhead, err
 }
 
-// ReapiModuleCancel cancels the allocation or reservation corresponding to jobid.
+// Cancel cancels the allocation or reservation corresponding to jobid.
 //
 //	\param ctx       reapi_module_ctx_t context object
 //	\param jobid     jobid of the uint64_t type.
@@ -112,8 +118,8 @@ func ReapiModuleInfo(ctx *ReapiCtx, jobid int64) (reserved bool, at int64, overh
 // int reapi_module_cancel (reapi_module_ctx_t *ctx,
 //
 //	const uint64_t jobid, bool noent_ok);*/
-func ReapiModuleCancel(ctx *ReapiCtx, jobid int64, noent_ok bool) (err error) {
-	fluxerr := (int)(C.reapi_module_cancel((*C.struct_reapi_module_ctx)(ctx),
+func (m *ReapiModule) Cancel(ctx *ReapiCtx, jobid int64, noent_ok bool) (err error) {
+	fluxerr := (int)(C.reapi_module_cancel((*C.struct_reapi_module_ctx)(m.ctx),
 		(C.ulong)(jobid),
 		(C.bool)(noent_ok)))
 	return retvalToError(fluxerr, "issue with cancel")
