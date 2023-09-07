@@ -18,3 +18,7 @@ add_library ( reapi_module STATIC
 target_link_libraries(reapi_module PRIVATE
     flux::core
     )
+
+if ($ENV{WITH_GO})
+    add_subdirectory( go/src/test )
+endif()

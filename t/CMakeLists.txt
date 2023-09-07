@@ -81,6 +81,7 @@ set(ALL_TESTS
   t6002-graph-hwloc.t
   t7000-shell-datastaging.t
   t8001-util-ion-R.t
+  t9001-golang-basic.t
   )
 foreach(test ${ALL_TESTS})
   flux_add_test(NAME ${test}
