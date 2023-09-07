@@ -12,9 +12,10 @@ package main
 
 import (
 	"flag"
-	"fluxcli"
 	"fmt"
 	"os"
+
+	"github.com/flux-framework/flux-sched/resource/reapi/bindings/go/src/fluxcli"
 )
 
 func main() {
