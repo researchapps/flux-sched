@@ -19,6 +19,7 @@ target_link_libraries(reapi_module PRIVATE
     flux::core
     )
 
-if ($ENV{WITH_GO})
-    add_subdirectory( go/src/test )
+if(DEFINED ENV{WITH_GO})
+    message(STATUS "WITH_GO is set to build go bindings")
+    add_subdirectory( go )
 endif()
