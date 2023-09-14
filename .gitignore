@@ -134,3 +134,4 @@ test_*.t
 
 # Go
 resource/reapi/bindings/go/src/test/main
+resource/reapi/bindings/go/src/test/go-build.sh
