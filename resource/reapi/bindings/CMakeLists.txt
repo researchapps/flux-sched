@@ -1,4 +1,4 @@
-add_library ( reapi_cli STATIC
+add_library ( reapi_cli SHARED
     c++/reapi.hpp
     c++/reapi_cli.hpp
     c++/reapi_cli_impl.hpp
