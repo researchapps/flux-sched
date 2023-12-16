@@ -1,4 +1,4 @@
-add_library ( jobspec_conv STATIC
+add_library ( jobspec_conv SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/constraint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/constraint.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hostlist_constraint.cpp
