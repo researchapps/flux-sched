@@ -39,7 +39,8 @@ set(RESOURCE_HEADERS
     config/system_defaults.hpp
     store/resource_graph_store.hpp
     )
-set(RESOURCE_SOURCES 
+
+add_library(resource STATIC
     policies/dfu_match_locality.cpp
     policies/dfu_match_var_aware.cpp
     policies/dfu_match_policy_factory.cpp
@@ -68,60 +69,13 @@ set(RESOURCE_SOURCES
     evaluators/expr_eval_api.cpp
     evaluators/expr_eval_vtx_target.cpp
     store/resource_graph_store.cpp
-    )
-
-add_library(resource-object OBJECT
-    ${RESOURCE_SOURCES}
     ${RESOURCE_HEADERS}
-    )
-
-set_property(TARGET resource-object PROPERTY POSITION_INDEPENDENT_CODE 1)
-
-target_include_directories(resource-object PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(resource-object PRIVATE
-    planner
-    )
-target_link_libraries(resource-object PUBLIC
-    flux::hostlist
-    flux::idset
-    PkgConfig::JANSSON
-    PkgConfig::HWLOC
-    PkgConfig::UUID
-    Boost::system
-    Boost::graph
-    Boost::regex
-    jobspec_conv
-    Boost::filesystem
-    )
-
-add_library(resource STATIC 
-    $<TARGET_OBJECTS:resource-object>
     )
 target_include_directories(resource PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(resource PRIVATE
     planner
     )
 target_link_libraries(resource PUBLIC
-    flux::hostlist
-    flux::idset
-    PkgConfig::JANSSON
-    PkgConfig::HWLOC
-    PkgConfig::UUID
-    Boost::system
-    Boost::graph
-    Boost::regex
-    jobspec_conv
-    Boost::filesystem
-    )
-
-add_library(fluxion-resource SHARED 
-    $<TARGET_OBJECTS:resource-object>
-    )
-target_include_directories(fluxion-resource PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(fluxion-resource PRIVATE
-    planner
-    )
-target_link_libraries(fluxion-resource PUBLIC
     flux::hostlist
     flux::idset
     PkgConfig::JANSSON
@@ -142,3 +96,4 @@ add_subdirectory(schema)
 
 # programs that depend on libresource
 add_subdirectory(utilities)
+
