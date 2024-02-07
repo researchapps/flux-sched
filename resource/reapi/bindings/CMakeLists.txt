@@ -6,6 +6,7 @@ add_library ( reapi_cli SHARED
     c/reapi_cli.h
     )
 target_link_libraries(reapi_cli PRIVATE
+    resource
     flux::core
     )
 add_library ( reapi_module STATIC
@@ -16,6 +17,7 @@ add_library ( reapi_module STATIC
     c/reapi_module.h
     )
 target_link_libraries(reapi_module PRIVATE
+    resource
     flux::core
     )
 
