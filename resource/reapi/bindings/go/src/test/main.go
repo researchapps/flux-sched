@@ -15,7 +15,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/flux-framework/flux-sched/resource/reapi/bindings/go/src/fluxcli"
+	"github.com/researchapps/flux-sched/resource/reapi/bindings/go/src/fluxcli"
 )
 
 func main() {
