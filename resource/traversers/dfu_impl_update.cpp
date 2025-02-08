@@ -594,6 +594,7 @@ int dfu_impl_t::mod_dfv (vtx_t u, int64_t jobid, modify_data_t &mod_data)
     subsystem_t dom = m_match->dom_subsystem ();
     f_out_edg_iterator_t ei, ei_end;
 
+    (*m_graph)[u].idata.colors[dom] = m_color.gray ();
     if ((rc = mod_idata (u, jobid, dom, mod_data, stop)) != 0 || stop)
         goto done;
     if ((rc = mod_plan (u, jobid, mod_data)) != 0)
@@ -607,6 +608,7 @@ int dfu_impl_t::mod_dfv (vtx_t u, int64_t jobid, modify_data_t &mod_data)
                 rc += mod_dfv (tgt, jobid, mod_data);
             else
                 rc += mod_upv (tgt, jobid, mod_data);
+            (*m_graph)[u].idata.colors[subsystem] = m_color.black ();
         }
     }
 done:
